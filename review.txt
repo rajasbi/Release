@@ -1,0 +1,63 @@
+﻿#! /usr/bin/env /usr/bin/awk
+
+#Start of the program
+
+BEGIN {
+
+}
+
+function printvector(vec) {
+    printf("Contents : \n")
+    for(i in vec)
+        printf(i "=>" vec[i]"<=>\n")
+
+}
+
+{
+    #length of the folders will store and $3 gives folder from .txt file
+    len = split($3, b, ",")
+
+    #Based on length looping will happen 
+    for(i=1; i<=len; i++) {
+        
+	#Multiple occarence of folders will check here.
+	#$2,$1 are defect number and svn revision numbers
+
+        if(b[i] in a) {
+            a[b[i]] = a[b[i]]";"$2","$1
+        }
+	#Single occarance of folder will print ocordindly		
+        else {
+            a[b[i]] = $2","$1
+        }
+    }
+
+}
+
+END {
+	#loopibg through contents i.e folders;defect,svn number.
+
+    for(i in a) {
+
+	#printing of folders
+        print(i":")
+
+	#splitting folders based on “;”
+        split(a[i], b, ";")
+	#splitting defect,svn number based on “,”
+        for(j in b) {
+            #print("\t"b[j])
+            split(b[j], splitb, ",")
+            res[splitb[2]] = b[j]
+        }
+	#sorting res array and storing result in sortres
+
+        n = asorti(res, sortres)
+        #printvector(sortres)
+        for(ii=1; ii<=n; ii++)
+            print(ii"\t"res[sortres[ii]])
+        delete res 
+        delete sortres 
+    }
+}
+
